@@ -1,122 +1,102 @@
-Gemini Watermark Remover — Lossless Extraction Tool
+# Gemini Watermark Remover — Lossless Extraction Tool
 
-Welcome to the **RanginGFx** guide on removing Gemini watermarks. If you are working with AI-generated assets, those semi-transparent logos in the corner can disrupt your workflow.
+*By RanginGFx ([rangingfx.com](https://rangingfx.com))*
 
-This open-source engine removes Gemini watermarks with high-fidelity, reproducible results. Instead of relying on unpredictable AI inpainting that "guesses" what belongs behind the watermark, this tool uses a mathematically exact **Reverse Alpha Blending** algorithm to restore the original pixels losslessly.
+Semi-transparent watermarks on AI-generated assets disrupt professional production pipelines. While standard tools rely on generative AI inpainting that guesses and hallucinates what lies beneath, the **RanginGFx Gemini Watermark Remover** uses exact **Reverse Alpha Blending** to restore original pixels losslessly.
 
-> 💡 **Looking for a general watermark remover?** If you have watermarks this tool can't handle, check out [pilio.ai/image-watermark-remover](https://pilio.ai/image-watermark-remover) for a general-purpose AI solution.
+> **Need a general watermark remover?** This tool is mathematically calibrated specifically for Gemini outputs. For arbitrary watermarks or general retouching, an AI-based inpainting tool is recommended instead.
 
-## Quick Links & Tools
+---
 
-Choose the version that fits your RanginGFx workflow best:
+## Quick Links
 
-* **[Web App (Recommended)](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/)**: Free, browser-based, no installation required.
-* **[Video Remover](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/video)**: Specifically designed for Gemini-generated videos.
-* **[Chrome Extension](https://chromewebstore.google.com/detail/gemini-watermark-remover/cjlmnfcfnofnglkphbcdclbpimdjkmdf)**: Seamless integration directly on Gemini pages.
-* **[Userscript](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/userscript/gemini-watermark-remover.user.js)**: For Tampermonkey/Greasemonkey power users.
+* **[Web App (Recommended)](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/)** — Browser-based, client-side, zero installation required.
+* **[Video Remover](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/video)** — Dedicated frame-by-frame processor for Gemini video assets.
 
 ---
 
 ## Core Features
 
-* **100% Local Processing:** All image processing happens locally on your machine. Your assets are never uploaded to a server, ensuring total privacy.
-* **Mathematical Precision:** We use a Reverse Alpha Blending formula to calculate the exact original pixels, rather than using AI models that might hallucinate details.
-* **Auto-Detection:** Automatically identifies watermark size and placement based on Gemini's known output catalog and local anchor search.
-* **Video Support:** Effortlessly process Gemini-generated video files directly in your browser.
-* **Cross-Platform Integration:** Works natively in modern browsers (Chrome, Firefox, Safari, Edge) and Node.js environments.
+* **100% Local Processing:** Assets never leave your machine. All operations run client-side in your browser or terminal for absolute data privacy.
+* **Mathematical Precision:** Recovers original pixel values via inverse alpha mapping rather than generative approximation.
+* **Automated Detection:** Identifies watermark dimensions and coordinates dynamically using output catalog signatures and local anchor scans.
+* **Video Support:** Strips watermarks across video frames natively inside modern browsers.
+* **Cross-Platform:** Runs out of the box in modern web browsers (Chrome, Edge, Firefox, Safari) and Node.js environments.
 
 ---
 
 ## How to Remove Gemini Watermarks
 
-### 1. Online Image Remover (Fastest Method)
+### Online Image Remover
 
-Perfect for quick edits and one-off images.
+1. Go to [geminiwatermarkremover.rangingfx.com](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/).
+2. Drag and drop your Gemini-generated image.
+3. The engine automatically identifies and inverts the watermark layer.
+4. Download your clean, uncompressed asset.
 
-1. Navigate to **[geminiwatermarkremover.rangingfx.com](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/)**.
-2. Drag and drop your Gemini-generated image into the interface.
-3. The engine automatically detects and extracts the watermark.
-4. Download your clean, restored image.
+### Online Video Remover
 
-### 2. Online Video Remover
-
-For Gemini-generated videos with visible watermarks. *Note: Processing runs entirely in your browser; no video files are uploaded.*
-
-1. Go to **[geminiwatermarkremover.rangingfx.com/video](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/video)**.
-2. Upload your Gemini video file.
-3. Allow the tool to process the frames and remove the overlay.
-4. Export the cleaned video.
-
-### 3. Chrome Extension Integration
-
-Ideal if you want automatic processing while actively prompting in Gemini.
-
-1. Install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/gemini-watermark-remover/cjlmnfcfnofnglkphbcdclbpimdjkmdf).
-2. Open your Gemini workspace. The extension automatically processes supported images.
-3. Use the "Enable on Gemini" toggle in the extension popup to easily pause the tool if you need to troubleshoot page performance.
+1. Go to [geminiwatermarkremover.rangingfx.com/video](https://www.google.com/search?q=https://geminiwatermarkremover.rangingfx.com/video).
+2. Upload your Gemini video file *(processed entirely in-memory; no server uploads)*.
+3. Allow the tool to calculate and restore the affected pixel areas frame-by-frame.
+4. Export the processed video file.
 
 ---
 
-## Under the Hood: The Math Behind the Magic
+## Technical Overview: The Math
 
-### How Gemini Applies the Watermark
+### Alpha Compositing in Gemini
 
-Gemini places its logo using standard alpha compositing. The formula looks like this:
+Gemini overlays its visual identifier via standard linear alpha compositing:
 
-$$watermarked = \alpha \cdot logo + (1 - \alpha) \cdot original$$
+$$\text{watermarked} = \alpha \cdot \text{logo} + (1 - \alpha) \cdot \text{original}$$
 
-* `watermarked`: The final pixel value you see.
-* `\alpha`: The transparency level of the watermark (0.0 to 1.0).
-* `logo`: The color value of the watermark itself.
-* `original`: The underlying image pixel we want to retrieve.
+* **$\text{watermarked}$:** The rendered output pixel.
+* **$\alpha$:** Watermark opacity factor ($0.0 \le \alpha \le 1.0$).
+* **$\text{logo}$:** Known RGB value of the Gemini logo layer.
+* **$\text{original}$:** Underlying source pixel to be recovered.
 
-### The Reverse Solution
+### Reverse Reconstruction
 
-Because we can capture the watermark on a known solid background, we can reconstruct the exact Alpha map. By applying the inverse formula, we solve for the `original` pixels to achieve zero data loss:
+Because the exact dimensions and RGB profile of the watermark asset are known, the inverse operation isolates and solves for the original pixel without data loss:
 
-$$original = \frac{watermarked - \alpha \cdot logo}{1 - \alpha}$$
+$$\text{original} = \frac{\text{watermarked} - \alpha \cdot \text{logo}}{1 - \alpha}$$
 
-### Detection Rules
+### Detection & Placement Standards
 
-The tool relies on a layered detection system to ensure it only alters actual watermarks:
+The engine runs a three-stage verification pipeline prior to extraction: catalog lookup, local anchor scanning, and color boundary verification to prevent false positives.
 
-1. **Size catalog lookup:** Compares your image dimensions against known Gemini outputs.
-2. **Local anchor search:** Scans pixel data in the expected watermark region to lock onto the logo.
-3. **Restoration validation:** Confirms the watermark is genuine before applying the math, preventing false positives.
-
-| Condition | Watermark Size | Right Margin | Bottom Margin |
+| Output Classification | Watermark Size | Right Margin | Bottom Margin |
 | --- | --- | --- | --- |
-| **Larger outputs** | 96×96 | 64px | 64px |
-| **Smaller outputs** | 48×48 | 32px | 32px |
+| **High-Resolution Outputs** | 96×96 px | 64 px | 64 px |
+| **Standard Outputs** | 48×48 px | 32 px | 32 px |
 
 ---
 
 ## Developer & CLI Usage
 
-For the technical RanginGFx community looking to script, automate, or integrate this into CI pipelines.
+For batch processing, automated render pipelines, and CI/CD workflows:
 
-**Global CLI Installation:**
+**Global CLI Command:**
 
 ```bash
 gwr remove <input> [--output <file> | --out-dir <dir>] [--overwrite] [--json]
 
 ```
 
-**Run without installing via pnpm:**
+**Run via npx / pnpm without installation:**
 
 ```bash
 pnpm dlx @pilio/gemini-watermark-remover remove <input> --output <file>
 
 ```
 
-**Note:** If you are using the CLI file path in your own project, make sure to install `sharp` alongside this package (`pnpm add sharp`) as it is required for default file decoding/encoding.
+*Note: When integrating the core package into custom Node.js projects, install `sharp` alongside it (`pnpm add sharp`) for native image decoding/encoding.*
 
 ---
 
-## Limitations & Disclaimers
+## Scope & Limitations
 
-> **Important:** This tool targets **visible** Gemini watermarks (the semi-transparent logo). It does *not* remove invisible or steganographic watermarks (like SynthID).
-
-**Disclaimer:** Use this tool at your own risk. While highly reliable, unexpected results may occur due to variations in Gemini's watermark updates, corrupted formats, or untested edge cases. Disable any fingerprint defender extensions (e.g., Canvas Fingerprint Defender) before use, as they can cause processing errors.
-
-*This project is a JavaScript port of the original Gemini Watermark Tool by Allen Kuo, utilizing the Reverse Alpha Blending method. Released under the MIT License.*
+* **Visible Overlays Only:** This utility specifically reverses the visible semi-transparent watermark logo. It does not alter invisible digital watermarks (such as Google SynthID).
+* **Extension Conflicts:** Browser extensions that randomize or defend canvas finger-printing (e.g., *Canvas Fingerprint Defender*) corrupt pixel extraction readouts and should be disabled while using the web tool.
+* **License:** Distributed under the MIT License.
